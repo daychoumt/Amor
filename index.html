@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nosso Amor 💖</title>
+  <meta name="description" content="Um site especial com nossas fotos, motivos do nosso amor e o tempo que estamos juntos." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
+</head>
+<body>
+  <!-- Cabeçalho -->
+  <header class="site-header">
+    <div class="container header-content">
+      <a class="brand" href="#top" aria-label="Ir para o topo">Nosso Amor</a>
+
+      <nav class="nav" aria-label="Seções do site">
+        <button class="btn-ghost" id="themeToggle" aria-label="Alternar tema (claro/escuro)">
+          <span id="themeIcon" aria-hidden="true">🌙</span>
+        </button>
+        <a href="#galeria" class="nav-link">Fotos</a>
+        <a href="#motivos" class="nav-link">Motivos</a>
+        <a href="#contador" class="nav-link">Contador</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero / Capa -->
+  <main id="top">
+    <section class="hero">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="container hero-inner">
+        <div class="hero-text reveal">
+          <h1>Thalys &amp; <span class="accent">Sabrina</span></h1>
+          <p>Um cantinho nosso, com lembranças, razões e o tempo que nos escolhemos todos os dias.</p>
+          <a href="#galeria" class="btn-primary">Ver fotos</a>
+        </div>
+        <figure class="hero-photo reveal">
+          <img src="liba.jpg" alt="Nossa foto juntos" loading="eager" />
+          <figcaption>Para sempre é feito de agoras.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Galeria -->
+    <section id="galeria" class="section container">
+      <header class="section-header reveal">
+        <h2>Galeria de Momentos</h2>
+        <p>Alguns registros que aquecem o coração.</p>
+      </header>
+
+      <div class="grid-gallery">
+        <button class="card reveal" data-lightbox="assets/fotos/01.jpg" aria-label="Abrir foto 1">
+          <img src="olhoverde.jpg" alt="Nós dois sorrindo" loading="lazy">
+        </button>
+        <button class="card reveal" data-lightbox="assets/fotos/02.jpg" aria-label="Abrir foto 2">
+          <img src="domingofeliz.jpg" alt="Passeio especial" loading="lazy">
+        </button>
+        <button class="card reveal" data-lightbox="assets/fotos/03.jpg" aria-label="Abrir foto 3">
+          <img src="eueela.jpg" alt="Um abraço apertado" loading="lazy">
+        </button>
+        <button class="card reveal" data-lightbox="assets/fotos/04.jpg" aria-label="Abrir foto 4">
+          <img src="euevc.jpg" alt="Nosso momento favorito" loading="lazy">
+        </button>
+        <button class="card reveal" data-lightbox="assets/fotos/05.jpg" aria-label="Abrir foto 5">
+          <img src="sorrisomaislindo.jpg" alt="Café da manhã juntos" loading="lazy">
+        </button>
+        <button class="card reveal" data-lightbox="assets/fotos/06.jpg" aria-label="Abrir foto 6">
+          <img src="feliz.jpg" alt="Foto espontânea" loading="lazy">
+        </button>
+      </div>
+
+    </section>
+
+    <!-- Motivos do nosso amor -->
+    <section id="motivos" class="section section-alt">
+      <div class="container">
+        <header class="section-header reveal">
+          <h2>Motivos do Nosso Amor</h2>
+          <p>Pequenas grandes coisas que nos fazem dar certo.</p>
+        </header>
+
+        <ol class="reasons">
+          <li class="reason reveal">
+            <h3>Companheirismo</h3>
+            <p>Estamos lado a lado nos dias bons e, principalmente, nos difíceis.</p>
+          </li>
+          <li class="reason reveal">
+            <h3>Risos Infinitos</h3>
+            <p>Até nas bobeiras, encontramos motivos para sorrir juntos.</p>
+          </li>
+          <li class="reason reveal">
+            <h3>Planos em Comum</h3>
+            <p>Sonhamos, planejamos e construímos o futuro de mãos dadas.</p>
+          </li>
+          <li class="reason reveal">
+            <h3>Respeito &amp; Carinho</h3>
+            <p>Nos cuidamos com palavras gentis, atenção e afeto diário.</p>
+          </li>
+        </ol>
+
+        
+    </section>
+
+    <!-- Contador de tempo juntos -->
+    <section id="contador" class="section">
+      <div class="container">
+        <header class="section-header reveal">
+          <h2>Nosso Tempo Juntos</h2>
+          <p>Desde o dia em que dissemos “sim” ao amor.</p>
+        </header>
+
+        <div class="timer reveal" role="timer" aria-live="polite" aria-atomic="true">
+          <div class="time-box">
+            <span id="years" class="time-value">0</span>
+            <span class="time-label">anos</span>
+          </div>
+          <div class="time-box">
+            <span id="months" class="time-value">0</span>
+            <span class="time-label">meses</span>
+          </div>
+          <div class="time-box">
+            <span id="days" class="time-value">0</span>
+            <span class="time-label">dias</span>
+          </div>
+          <div class="time-box">
+            <span id="hours" class="time-value">00</span>
+            <span class="time-label">horas</span>
+          </div>
+          <div class="time-box">
+            <span id="minutes" class="time-value">00</span>
+            <span class="time-label">minutos</span>
+          </div>
+          <div class="time-box">
+            <span id="seconds" class="time-value">00</span>
+            <span class="time-label">segundos</span>
+          </div>
+        </div>
+
+        
+      </div>
+    </section>
+  </main>
+
+  <!-- Lightbox (modal) -->
+  <div id="lightbox" class="lightbox" aria-modal="true" role="dialog" aria-hidden="true">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Fechar imagem (Esc)">✕</button>
+    <img id="lightboxImg" src="" alt="Foto ampliada">
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Feito com amor por Thalys ❤️</p>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
