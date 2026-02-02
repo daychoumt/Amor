@@ -3,10 +3,10 @@
 =================================== */
 
 // Data de início do relacionamento (AAAA-MM-DD HH:MM)
-const START_DATE = "2025-07-17 00:00"; // data correta
+const START_DATE = "2025-07-17 00:00"; // 17/07/2025 às 00:00
 
-// Nome para o título (opcional)
-const PARTNER_NAME = "Sabrina"; // aparece na capa
+// Nome para a capa
+const PARTNER_NAME = "Sabrina";
 
 /* ================================
    LÓGICA DO SITE
@@ -49,9 +49,7 @@ function applySavedTheme(){
 /* Nome da capa */
 function updateHeroName(){
   const el = document.getElementById("partnerName");
-  if(el && PARTNER_NAME){
-    el.textContent = PARTNER_NAME;
-  }
+  if(el && PARTNER_NAME) el.textContent = PARTNER_NAME;
 }
 
 /* Reveal on scroll */
@@ -110,18 +108,27 @@ function setupLightbox(){
 /* Contador de tempo juntos */
 function startLoveTimer(){
   const start = parseDateLocal(START_DATE);
-  const ids = ["years","months","days","hours","minutes","seconds"];
-  const els = Object.fromEntries(ids.map(id => [id, document.getElementById(id)]));
+
+  const els = {
+    years: document.getElementById("years"),
+    months: document.getElementById("months"),
+    days: document.getElementById("days"),
+    hours: document.getElementById("hours"),
+    minutes: document.getElementById("minutes"),
+    seconds: document.getElementById("seconds"),
+  };
+
+  // Debug rápido (opcional): veja no console se a data está correta
+  // console.log("START_DATE parsed:", start.toString());
 
   function tick(){
     const now = new Date();
-    const diff = diffYMDHMS(start, now);
-    if(!diff) return;
+    const diff = diffPartsIncremental(start, now);
 
-    if(els.years)   els.years.textContent   = diff.years;
-    if(els.months)  els.months.textContent  = diff.months;
-    if(els.days)    els.days.textContent    = diff.days;
-    if(els.hours)   els.hours.textContent   = String(diff.hours).padStart(2, "0");
+    if(els.years) els.years.textContent = diff.years;
+    if(els.months) els.months.textContent = diff.months;
+    if(els.days) els.days.textContent = diff.days;
+    if(els.hours) els.hours.textContent = String(diff.hours).padStart(2, "0");
     if(els.minutes) els.minutes.textContent = String(diff.minutes).padStart(2, "0");
     if(els.seconds) els.seconds.textContent = String(diff.seconds).padStart(2, "0");
   }
@@ -130,28 +137,52 @@ function startLoveTimer(){
   setInterval(tick, 1000);
 }
 
-/* Utilitário: diferença detalhada entre datas */
-function diffYMDHMS(start, end){
-  if(!(start instanceof Date) || isNaN(start)) return null;
+/* Diferença robusta: soma anos e meses sem estourar */
+function diffPartsIncremental(start, end){
+  if(!(start instanceof Date) || isNaN(start)) {
+    return { years: 0, months: 0, days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
 
-  let a = new Date(start), b = new Date(end);
+  // Se por algum motivo start > end, zera (ou você pode inverter, se quiser)
+  if(start > end){
+    return { years: 0, months: 0, days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
 
-  let years = b.getFullYear() - a.getFullYear();
-  let aTest = new Date(a); aTest.setFullYear(a.getFullYear() + years);
-  if(aTest > b){ years--; aTest.setFullYear(a.getFullYear() + years); }
+  let cursor = new Date(start);
+  let years = 0;
+  let months = 0;
 
-  let months = b.getMonth() - aTest.getMonth();
-  if(months < 0){ years--; months += 12; aTest.setFullYear(aTest.getFullYear() - 1); }
-  let mTest = new Date(aTest); mTest.setMonth(aTest.getMonth() + months);
-  if(mTest > b){ months--; mTest.setMonth(aTest.getMonth() + months); }
+  // Anos
+  while (true){
+    const next = new Date(cursor);
+    next.setFullYear(next.getFullYear() + 1);
+    if(next <= end){
+      cursor = next;
+      years++;
+    } else break;
+  }
 
-  let days = Math.floor((b - mTest) / (1000*60*60*24));
-  let dTest = new Date(mTest.getTime() + days*24*60*60*1000);
+  // Meses
+  while (true){
+    const next = new Date(cursor);
+    next.setMonth(next.getMonth() + 1);
+    if(next <= end){
+      cursor = next;
+      months++;
+    } else break;
+  }
 
-  let rem = b - dTest;
-  let hours = Math.floor(rem / (1000*60*60)); rem -= hours*(1000*60*60);
-  let minutes = Math.floor(rem / (1000*60)); rem -= minutes*(1000*60);
-  let seconds = Math.floor(rem / 1000);
+  // Resto em ms
+  let ms = end - cursor;
+
+  const dayMs = 24 * 60 * 60 * 1000;
+  const hourMs = 60 * 60 * 1000;
+  const minuteMs = 60 * 1000;
+
+  const days = Math.floor(ms / dayMs); ms -= days * dayMs;
+  const hours = Math.floor(ms / hourMs); ms -= hours * hourMs;
+  const minutes = Math.floor(ms / minuteMs); ms -= minutes * minuteMs;
+  const seconds = Math.floor(ms / 1000);
 
   return { years, months, days, hours, minutes, seconds };
 }
@@ -160,9 +191,11 @@ function diffYMDHMS(start, end){
 function parseDateLocal(str){
   const [datePart, timePart] = str.split(" ");
   const [y, m, d] = datePart.split("-").map(Number);
+
   let hh = 0, mm = 0;
   if(timePart){
     [hh, mm] = timePart.split(":").map(Number);
   }
-  return new Date(y, (m-1), d, hh||0, mm||0, 0);
+
+  return new Date(y, (m-1), d, hh || 0, mm || 0, 0);
 }
