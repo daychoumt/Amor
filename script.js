@@ -3,7 +3,7 @@
 =================================== */
 
 // Data de início do relacionamento (AAAA-MM-DD HH:MM)
-const START_DATE = "2025-08-31 20:00"; // data correta
+const START_DATE = "2025-07-17 00:00"; // data correta
 
 // Nome para o título (opcional)
 const PARTNER_NAME = "Sabrina"; // aparece na capa
@@ -36,18 +36,21 @@ function setupThemeToggle(){
 
 function applySavedTheme(){
   const saved = localStorage.getItem("theme");
+  const icon = document.getElementById("themeIcon");
+
   if(saved === "light"){
     document.documentElement.classList.add("light");
-    const icon = document.getElementById("themeIcon");
     if(icon) icon.textContent = "🌞";
+  } else {
+    if(icon) icon.textContent = "🌙";
   }
 }
 
 /* Nome da capa */
 function updateHeroName(){
-  const el = document.querySelector(".hero-text h1");
+  const el = document.getElementById("partnerName");
   if(el && PARTNER_NAME){
-    el.innerHTML = el.innerHTML.replace("Amor da Minha Vida", escapeHtml(PARTNER_NAME));
+    el.textContent = PARTNER_NAME;
   }
 }
 
@@ -62,34 +65,45 @@ function setupRevealOnScroll(){
       }
     });
   }, { threshold: 0.12 });
+
   items.forEach(i => io.observe(i));
 }
 
-/* Lightbox simples */
+/* Lightbox */
 function setupLightbox(){
   const buttons = document.querySelectorAll("[data-lightbox]");
   const modal = document.getElementById("lightbox");
   const img = document.getElementById("lightboxImg");
   const closeBtn = document.getElementById("lightboxClose");
 
+  if(!modal || !img || !closeBtn) return;
+
   function close(){
     modal.setAttribute("aria-hidden", "true");
     img.src = "";
+    document.body.classList.remove("no-scroll");
+    closeBtn.blur();
   }
+
   function open(src){
     img.src = src;
     modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("no-scroll");
+    closeBtn.focus();
   }
 
   buttons.forEach(btn => {
     btn.addEventListener("click", () => open(btn.dataset.lightbox));
   });
+
   closeBtn.addEventListener("click", close);
+
   modal.addEventListener("click", (e) => {
     if(e.target === modal) close();
   });
+
   document.addEventListener("keydown", (e) => {
-    if(e.key === "Escape") close();
+    if(e.key === "Escape" && modal.getAttribute("aria-hidden") === "false") close();
   });
 }
 
@@ -104,13 +118,14 @@ function startLoveTimer(){
     const diff = diffYMDHMS(start, now);
     if(!diff) return;
 
-    els.years.textContent   = diff.years;
-    els.months.textContent  = diff.months;
-    els.days.textContent    = diff.days;
-    els.hours.textContent   = String(diff.hours).padStart(2, "0");
-    els.minutes.textContent = String(diff.minutes).padStart(2, "0");
-    els.seconds.textContent = String(diff.seconds).padStart(2, "0");
+    if(els.years)   els.years.textContent   = diff.years;
+    if(els.months)  els.months.textContent  = diff.months;
+    if(els.days)    els.days.textContent    = diff.days;
+    if(els.hours)   els.hours.textContent   = String(diff.hours).padStart(2, "0");
+    if(els.minutes) els.minutes.textContent = String(diff.minutes).padStart(2, "0");
+    if(els.seconds) els.seconds.textContent = String(diff.seconds).padStart(2, "0");
   }
+
   tick();
   setInterval(tick, 1000);
 }
@@ -150,14 +165,4 @@ function parseDateLocal(str){
     [hh, mm] = timePart.split(":").map(Number);
   }
   return new Date(y, (m-1), d, hh||0, mm||0, 0);
-}
-
-/* Escapar HTML básico */
-function escapeHtml(s){
-  return String(s)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
 }
