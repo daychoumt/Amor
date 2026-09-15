@@ -1,61 +1,174 @@
-# 💖 Nosso Amor — Thalys & Sabrina
+# StockFlow
 
-> Um cantinho especial na internet, feito com amor para guardar memórias, fotos e momentos únicos.
+Sistema full stack de **gestão de estoque e movimentações**, criado como projeto de portfólio para demonstrar arquitetura de software, API REST, modelagem relacional, regras de negócio e interface operacional.
 
-![Love](https://img.shields.io/badge/Feito_com-❤️_Amor-ff69b4?style=for-the-badge)
-![HTML](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+## Primeira versão
 
----
+A base inicial já contém:
 
-## 🌐 Acesso
+- Dashboard responsivo em React + TypeScript.
+- Cadastro e busca de produtos.
+- Indicadores de SKUs, unidades, estoque baixo e valor em custo.
+- Entrada e saída manual de estoque.
+- Histórico de movimentações preparado no banco.
+- Bloqueio de saída quando não há saldo suficiente.
+- API REST com Express e validação Zod.
+- PostgreSQL + Prisma ORM.
+- Docker Compose para o banco local.
 
-🔗 **[https://daychoumt.github.io/Amor](https://daychoumt.github.io/Amor)**
+## Stack
 
----
+### Frontend
+- React 19
+- TypeScript
+- Vite
+- CSS responsivo
 
-## 💕 Sobre o projeto
+### Backend
+- Node.js
+- Express 5
+- TypeScript
+- Zod
+- Prisma ORM 6
 
-Um site romântico e personalizado criado como presente especial. Reúne fotos, memórias, motivos do amor e um contador em tempo real mostrando há quanto tempo o casal está junto.
+### Banco
+- PostgreSQL 16
 
----
+## Arquitetura
 
-## ✨ Funcionalidades
+```text
+apps/
+├── api/
+│   ├── prisma/
+│   └── src/
+│       ├── lib/
+│       ├── middleware/
+│       └── modules/
+│           ├── inventory/
+│           └── products/
+└── web/
+    └── src/
 
-- 📸 **Galeria de fotos** — momentos especiais do casal com visualização em lightbox
-- 💌 **Motivos do amor** — razões personalizadas que tornam o relacionamento único
-- ⏱️ **Contador em tempo real** — anos, meses, dias, horas, minutos e segundos juntos
-- 🌙 **Modo escuro** — alternância entre tema claro e escuro
-- 📱 **Responsivo** — funciona perfeitamente no celular e computador
-- 🖼️ **Lightbox** — clique em qualquer foto para ampliar
+docs/
+├── ARCHITECTURE.md
+└── ROADMAP.md
+```
 
----
+## Como rodar
 
-## 🛠️ Tecnologias
+### 1. Pré-requisitos
 
-| Tecnologia | Uso |
-|-----------|-----|
-| HTML5 | Estrutura da página |
-| CSS3 | Estilo e animações |
-| JavaScript | Contador e interatividade |
-| GitHub Pages | Hospedagem gratuita |
+- Node.js 22+
+- npm
+- Docker Desktop
 
----
+### 2. Instale as dependências
 
-## 💝 Seções
+Na raiz do projeto:
 
-- **Início** — frase especial e foto principal
-- **Galeria** — fotos dos momentos juntos
-- **Motivos** — razões do amor listadas com carinho
-- **Contador** — tempo exato desde o início do relacionamento
+```bash
+npm install
+```
 
----
+### 3. Inicie o PostgreSQL
 
-## 👨‍💻 Desenvolvido por
+```bash
+docker compose up -d
+```
 
-**Thalys Daychoum** — feito com ❤️ para Sabrina
+### 4. Configure a API
 
----
+Copie:
 
-*"Para sempre é feito de agoras."*
+```text
+apps/api/.env.example
+```
+
+para:
+
+```text
+apps/api/.env
+```
+
+A configuração padrão já aponta para o PostgreSQL do Docker Compose.
+
+### 5. Crie o banco
+
+```bash
+npm run db:generate --workspace @stockflow/api
+npm run db:migrate --workspace @stockflow/api -- --name init
+npm run db:seed --workspace @stockflow/api
+```
+
+### 6. Rode o backend
+
+```bash
+npm run dev:api
+```
+
+API: `http://localhost:3333`
+
+Teste rápido: `GET http://localhost:3333/health`
+
+### 7. Rode o frontend
+
+Em outro terminal:
+
+```bash
+npm run dev:web
+```
+
+Interface: `http://localhost:5173`
+
+## Endpoints iniciais
+
+```text
+GET  /health
+GET  /products
+GET  /products/:id
+POST /products
+POST /products/:productId/movements
+```
+
+### Exemplo de movimentação
+
+Entrada:
+
+```json
+{
+  "type": "ENTRY",
+  "delta": 10,
+  "reason": "Compra do fornecedor"
+}
+```
+
+Saída:
+
+```json
+{
+  "type": "EXIT",
+  "delta": -2,
+  "reason": "Venda balcão"
+}
+```
+
+## Regra importante do estoque
+
+O saldo atual fica em `Product.currentStock`, mas cada mudança também é registrada em `StockMovement`. Saldo e histórico são alterados dentro da mesma transação.
+
+Uma saída usa atualização condicional no banco, reduzindo o risco de saldo negativo quando duas operações tentam retirar o mesmo item simultaneamente.
+
+## Próximos passos
+
+1. Categorias e fornecedores completos.
+2. Autenticação e perfis de acesso.
+3. Histórico visual de movimentações.
+4. Compras e vendas.
+5. Testes automatizados e CI.
+6. Docker da API e deploy.
+
+Veja [`docs/ROADMAP.md`](docs/ROADMAP.md).
+
+## Autor
+
+Desenvolvido por **Thalys Daychoum** como projeto de portfólio em desenvolvimento full stack.
