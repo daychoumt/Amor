@@ -1,3 +1,12 @@
+export type Supplier = {
+  id: string;
+  name: string;
+  contactName?: string;
+  phone?: string;
+  email?: string;
+  createdAt: string;
+};
+
 export type Product = {
   id: string;
   sku: string;
@@ -17,4 +26,29 @@ export type NewProduct = {
   costPrice: number;
   salePrice: number;
   minimumStock: number;
+  categoryName?: string;
+  supplierId?: string;
+  initialStock?: number;
+};
+
+export type NewSupplier = {
+  name: string;
+  contactName?: string;
+  phone?: string;
+  email?: string;
+};
+
+export type MovementType = 'ENTRY' | 'EXIT';
+
+export type StockMovement = {
+  id: string;
+  productId: string;
+  productName: string;
+  productSku: string;
+  type: MovementType;
+  quantity: number;
+  reason: string;
+  stockBefore: number;
+  stockAfter: number;
+  createdAt: string;
 };
